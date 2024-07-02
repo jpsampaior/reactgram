@@ -88,7 +88,7 @@ const getCurrentUser = async (req, res) => {
 
 // Update an user
 const updateUser = async (req, res) => {
-    const {name, password, bio} = req.body
+    const { name, password, bio } = req.body
 
     let profileImage = null
 
@@ -110,11 +110,11 @@ const updateUser = async (req, res) => {
 
         user.password = passwordHash
     }
-    
+
     if (bio) {
         user.bio = bio
     }
-    
+
     if (profileImage) {
         user.profileImage = profileImage
     }
@@ -124,9 +124,25 @@ const updateUser = async (req, res) => {
     res.status(200).json(user)
 }
 
+const getUserById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const user = await User.findById(new mongoose.Types.ObjectId(id)).select('-password')
+
+        res.status(200).json(user)
+    } catch (error) {
+        return res.status(404).json({
+            errors: ['User not found'],
+        })
+    }
+}
+
+
 module.exports = {
     register,
     login,
     getCurrentUser,
-    updateUser
+    updateUser,
+    getUserById
 }
