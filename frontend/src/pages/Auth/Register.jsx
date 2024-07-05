@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import Message from "../../components/Message"
 import { useState, useEffect } from "react"
 import { register, reset } from "../../slices/authSlice"
 import { useDispatch, useSelector } from "react-redux"
@@ -41,7 +42,11 @@ const Register = () => {
         <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
         <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} value={password} />
         <input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} />
-        <button type="submit">Register</button>
+        {!loading
+          ? <button type="submit">Register</button>
+          : <button type="submit" disabled>Loading...</button>
+        }
+        {error && <Message msg={error} type="error" />}
       </form>
       <p>Already have an account? <Link to="/login">Sign In</Link></p>
     </div>
