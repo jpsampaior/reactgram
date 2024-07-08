@@ -1,9 +1,49 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import Message from '../../components/Message'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { login, reset } from '../../slices/authSlice'
 import "./Auth.css"
 
+
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch()
+  const { loading, error } = useSelector(state => state.auth)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const user = {
+      email,
+      password
+    }
+
+    dispatch(login(user))
+  }
+
+  useEffect(() => {
+    dispatch(reset())
+  }, dispatch)
+
   return (
-    <div>Login</div>
+    <div id='login'>
+      <h2>ReactGram</h2>
+      <p className="subtitle">Sign in to see what's new</p>
+      <form onSubmit={handleSubmit}>
+        <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} value={password} />
+        {!loading
+          ? <button type="submit">Sign in</button>
+          : <button type="submit" disabled>Loading...</button>
+        }
+        {error && <Message msg={error} type="error" />}
+        <p>Don't have an account? <Link to='register'> Sign up</Link></p>
+      </form>
+    </div>
   )
 }
 
